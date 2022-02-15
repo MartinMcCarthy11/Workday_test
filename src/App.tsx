@@ -31,32 +31,14 @@ function App() {
 
 	const initialFilter = (data: Managers) => {
 		let filteredArray = [] as SearchResultItem[];
-		let completeEmployeesArr: Included[] = [];
-		data.data.map((item: Included) => {
-			if (item.type === Type.Employees) {
-				completeEmployeesArr.push(item);
-			}
-			return completeEmployeesArr;
-		});
+		let tempArr = [] as SearchResultItem[];
+		let emailArray: string[] = [];
 
-		data.included.map((item) => {
-			if (item.type === Type.Employees) {
-				completeEmployeesArr.push(item);
-			}
-			return completeEmployeesArr;
-		});
-
-		completeEmployeesArr = completeEmployeesArr.filter(
-			(item, index, self) =>
-				index === self.findIndex((t) => t.id === item.id)
-		);
-
-		console.log(completeEmployeesArr);
-
-		data.data.map((item) => {
+		//Filter Data.data  and map to SearchResultItem
+		data.data.filter((item) => {
 			if (item.attributes['Job Level'] == null) return null;
 			return filteredArray.push({
-				id: id(),
+				id: item.id,
 				lastName: item.attributes.lastName,
 				name: item.attributes.name,
 				level: item.attributes['Job Level'],
@@ -64,6 +46,7 @@ function App() {
 			} as SearchResultItem);
 		});
 
+		//Sort acsendingly
 		filteredArray.sort(function (a, b) {
 			const nameA = a.name.toLowerCase(),
 				nameB = b.name.toLowerCase();
@@ -72,29 +55,50 @@ function App() {
 			return 0;
 		});
 
-		let emailArray = [] as any;
-		data.included
-			.map((item) => {
-				if (
-					item.type !== Type.Employees &&
-					!item.attributes.email?.includes('manager')
-				) {
-					emailArray.push(item.attributes.email);
-				}
-				return emailArray;
-			})
-			.sort(function (a: string, b: string) {
-				if (a < b) return -1;
-				if (a > b) return 1;
-				return 0;
-			});
+		//Filter data.included to get emails and push into emailArray
+		//Get employee types and push into tempArr
+		data.included.filter((item) => {
+			if (
+				item.type !== Type.Employees &&
+				!item.attributes.email?.includes('manager')
+			) {
+				emailArray.push(item.attributes.email!);
+			}
 
+			if (item.type === Type.Employees) {
+				return tempArr.push({
+					id: item.id,
+					lastName: item.attributes.lastName,
+					name: item.attributes.name,
+					level: item.attributes['Job Level'],
+					email: '',
+				} as SearchResultItem);
+			}
+			return emailArray;
+		});
+
+		//Sort ascendingly
+		emailArray.sort(function (a: string, b: string) {
+			if (a < b) return -1;
+			if (a > b) return 1;
+			return 0;
+		});
+
+		//Iterate through filtered array and populate the email property for each element
 		filteredArray.map((item, index) => {
 			item.email = emailArray[index];
 			return item;
 		});
 
-		console.log(emailArray);
+		//Combine temp arr and filtered array
+		filteredArray = [...filteredArray, ...tempArr];
+
+		//Remove duplicate objects
+		filteredArray = filteredArray.filter(
+			(item, index, self) =>
+				index === self.findIndex((t) => t.id === item.id)
+		);
+
 		console.log(filteredArray);
 		return filteredArray;
 	};
