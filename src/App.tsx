@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
-import { Included, Managers, Type } from './ApiResponse';
+import { Managers, Type } from './ApiResponseTypes';
 import { v4 as id } from 'uuid';
+import SearchBar from './SearchBar';
 
-interface SearchResultItem {
+export interface SearchResultItem {
 	id: string;
 	name: string;
 	level: string;
@@ -16,28 +17,26 @@ const apiUrl =
 	'https://gist.githubusercontent.com/daviferreira/41238222ac31fe36348544ee1d4a9a5e/raw/5dc996407f6c9a6630bfcec56eee22d4bc54b518/employees.json';
 
 function App() {
-	const [data, setData] = useState<Managers>();
-	const [filteredData, setFilteredData] = useState<SearchResultItem[]>();
+	const [searchData, setSearchData] = useState<SearchResultItem[]>();
 
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await axios.get<Managers>(apiUrl);
 			const result = await initialFilter(response.data);
-			setData(response.data);
-			setFilteredData(result);
+			setSearchData(result);
 		};
 		fetchData();
 	}, []);
 
 	const initialFilter = (data: Managers) => {
-		let filteredArray = [] as SearchResultItem[];
+		let searchDataSet = [] as SearchResultItem[];
 		let tempArr = [] as SearchResultItem[];
 		let emailArray: string[] = [];
 
 		//Filter Data.data  and map to SearchResultItem
 		data.data.filter((item) => {
 			if (item.attributes['Job Level'] == null) return null;
-			return filteredArray.push({
+			return searchDataSet.push({
 				id: item.id,
 				lastName: item.attributes.lastName,
 				name: item.attributes.name,
@@ -47,7 +46,7 @@ function App() {
 		});
 
 		//Sort acsendingly
-		filteredArray.sort(function (a, b) {
+		searchDataSet.sort(function (a, b) {
 			const nameA = a.name.toLowerCase(),
 				nameB = b.name.toLowerCase();
 			if (nameA < nameB) return -1;
@@ -85,40 +84,24 @@ function App() {
 		});
 
 		//Iterate through filtered array and populate the email property for each element
-		filteredArray.map((item, index) => {
+		searchDataSet.map((item, index) => {
 			item.email = emailArray[index];
 			return item;
 		});
 
 		//Combine temp arr and filtered array
-		filteredArray = [...filteredArray, ...tempArr];
+		searchDataSet = [...searchDataSet, ...tempArr];
 
 		//Remove duplicate objects
-		filteredArray = filteredArray.filter(
+		searchDataSet = searchDataSet.filter(
 			(item, index, self) =>
 				index === self.findIndex((t) => t.id === item.id)
 		);
 
-		console.log(filteredArray);
-		return filteredArray;
+		console.log(searchDataSet);
+		return searchDataSet;
 	};
-	return (
-		<div>
-			<input type='text'></input>
-			{/* {console.log(filteredData)} */}
-			<div>
-				{filteredData &&
-					filteredData.map((item) => (
-						<div key={item.id}>
-							<p>Test</p>
-							<h4>{item.name}</h4>
-							<p>{item.level}</p>
-							<p>{item.email}</p>
-						</div>
-					))}
-			</div>
-		</div>
-	);
+	return <SearchBar searchData={searchData!} />;
 }
 
 export default App;
