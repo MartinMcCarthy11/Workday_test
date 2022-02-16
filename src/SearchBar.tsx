@@ -1,24 +1,33 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { SearchResultItem } from './App';
+import { SearchResultObj } from './App';
+import SearchResultItem from './SearchResultItem';
+import { v4 as id } from 'uuid';
 
 interface Props {
-	searchData: SearchResultItem[];
+	searchData: SearchResultObj[];
 }
 
+//Use Context api instead of passing the api respobnse down
 function SearchBar({ searchData }: Props) {
 	const [typedChar, setTypedChar] = useState('');
-	const [filteredResult, setFilteredResult] = useState<SearchResultItem[]>(
-		[]
-	);
+	const [filteredResult, setFilteredResult] = useState<SearchResultObj[]>([]);
+	const [focusIndex, setFocusIndex] = useState(-1);
 
-	const filter = (searchData: SearchResultItem[], searchTerm: string) => {
-		const result = searchData.filter(({ name }) => {
+	const filter = (searchData: SearchResultObj[], searchTerm: string) => {
+		let result = [] as SearchResultObj[];
+		result = searchData.filter(({ name }) => {
 			return name
 				.replace(/\s/g, '')
 				.toLowerCase()
 				.includes(searchTerm.toLowerCase());
 		});
+
+		if (result.length === 0) {
+			result = searchData.filter(({ name }) => {
+				return name.toLowerCase().includes(searchTerm.toLowerCase());
+			});
+		}
 		return result;
 	};
 
@@ -47,9 +56,60 @@ function SearchBar({ searchData }: Props) {
 		}
 	}
 
-	function handleBlur() {
+	function handleResultItemClick(e: React.MouseEvent<HTMLDivElement>) {
+		const value = e.target as HTMLDivElement;
+		const value1 = value as HTMLDivElement;
+		setTypedChar(value1.getAttribute('data-name')!);
 		setFilteredResult([]);
 	}
+
+	function handleBlur(e: React.FocusEvent) {
+		e.persist();
+		if (
+			e.relatedTarget &&
+			e.relatedTarget!.getAttribute('data-name')! !== ''
+		) {
+			setTypedChar(e.relatedTarget!.getAttribute('data-name')!);
+			return;
+		} else {
+			setFilteredResult([]);
+		}
+	}
+
+	// function handleKeyUp(e: React.KeyboardEvent) {
+	// 	// if (e.key === 'Tab') {
+	// 	// 	const value = e.target as HTMLDivElement;
+	// 	// 	setTypedChar(value.getAttribute('data-name')!);
+	// 	// }
+	// 	// e.persist();
+	// 	// console.log(e.relatedTarget);
+	// 	// // if (e.relatedTarget && e.relatedTarget.id === '') {
+	// 	// // 	return;
+	// 	// // }
+	// 	// console.log(e.key);
+	// }
+
+	const handleKeyBoardNavigation = (e: React.KeyboardEvent) => {
+		switch (e.key) {
+			case 'Enter':
+				if (focusIndex !== -1) {
+					setTypedChar(filteredResult[focusIndex].name);
+					setFilteredResult([]);
+					return;
+				}
+				break;
+			case 'ArrowUp':
+				if (focusIndex > -1) {
+					setFocusIndex(focusIndex - 1);
+				}
+				break;
+			case 'ArrowDown':
+				if (focusIndex < filteredResult.length - 1) {
+					setFocusIndex(focusIndex + 1);
+				}
+				break;
+		}
+	};
 
 	return (
 		<SearchWrapper>
@@ -60,17 +120,18 @@ function SearchBar({ searchData }: Props) {
 				onChange={handleChange}
 				onClick={handleClick}
 				onBlur={handleBlur}
-			></SearchInput>
-			<SearchResultsContainer>
+				onKeyDown={handleKeyBoardNavigation}
+				autoComplete='off' // To be removed
+			/>
+			<SearchResultsContainer onClick={handleResultItemClick}>
 				{filteredResult.length !== 0 &&
-					filteredResult.map((item) => (
-						<ResultItem key={item.id}>
-							<ResultAvatar></ResultAvatar>
-							<ResultDetails>
-								<p>{item.name}</p>
-								<p>{item.email}</p>
-							</ResultDetails>
-						</ResultItem>
+					filteredResult.map((item, index) => (
+						<SearchResultItem
+							focusIndex={focusIndex}
+							index={index}
+							item={item}
+							key={id()}
+						/>
 					))}
 			</SearchResultsContainer>
 		</SearchWrapper>
@@ -92,34 +153,11 @@ const SearchInput = styled.input`
 const SearchResultsContainer = styled.div`
 	height: 135px;
 	overflow-x: hidden;
-	padding: 0px 8px;
+	padding: 2px 8px;
 
 	::-webkit-scrollbar {
 		display: none;
 	}
-`;
-
-const ResultItem = styled.div`
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	padding: 12px 12px 12px 0;
-`;
-
-const ResultDetails = styled.div`
-	display: flex;
-	flex-direction: column;
-
-	p {
-		margin: 0;
-		padding: 0;
-	}
-`;
-
-const ResultAvatar = styled.div`
-	width: 40px;
-	height: 40px;
-	background-color: aliceblue;
 `;
 
 export default SearchBar;

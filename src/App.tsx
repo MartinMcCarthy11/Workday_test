@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 import { Managers, Type } from './ApiResponseTypes';
-import { v4 as id } from 'uuid';
 import SearchBar from './SearchBar';
 
-export interface SearchResultItem {
+export interface SearchResultObj {
 	id: string;
 	avatar: {} | null;
 	name: string;
@@ -17,7 +16,7 @@ const apiUrl =
 	'https://gist.githubusercontent.com/daviferreira/41238222ac31fe36348544ee1d4a9a5e/raw/5dc996407f6c9a6630bfcec56eee22d4bc54b518/employees.json';
 
 function App() {
-	const [searchData, setSearchData] = useState<SearchResultItem[]>();
+	const [searchData, setSearchData] = useState<SearchResultObj[]>();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -29,8 +28,8 @@ function App() {
 	}, []);
 
 	const initialFilter = (data: Managers) => {
-		let searchDataSet = [] as SearchResultItem[];
-		let tempArr = [] as SearchResultItem[];
+		let searchDataSet = [] as SearchResultObj[];
+		let tempArr = [] as SearchResultObj[];
 		let emailArray: string[] = [];
 
 		//Filter Data.data  and map to SearchResultItem
@@ -42,7 +41,7 @@ function App() {
 				name: item.attributes.name,
 				level: item.attributes['Job Level'],
 				email: '',
-			} as SearchResultItem);
+			} as SearchResultObj);
 		});
 
 		//Sort acsendingly
@@ -71,7 +70,7 @@ function App() {
 					name: item.attributes.name,
 					level: item.attributes['Job Level'],
 					email: '',
-				} as SearchResultItem);
+				} as SearchResultObj);
 			}
 			return emailArray;
 		});
@@ -124,9 +123,19 @@ export default App;
  *                  --> arrow component
  *            --> search item component
  *
- *
- *
- *
+ * **** BUGS ****
+ * when you navigate down with keyboard list should scroll with you 
+ * disble input while loading
+ * 
+ * 
+
+
+ * 
+ ******Things to look into again if i have time
+ * -- selecting by data-name
+ * 				-- could possibly get key and then search for that key in list returning name value
+ *-- can i use props in styled components without passing them to the warapper?
+ *-- 
  *
  * *****Things to consider
  * -- performance
