@@ -7,9 +7,9 @@ import SearchBar from './SearchBar';
 
 export interface SearchResultItem {
 	id: string;
+	avatar: {} | null;
 	name: string;
 	level: string;
-	lastName: string;
 	email: string;
 }
 
@@ -38,7 +38,7 @@ function App() {
 			if (item.attributes['Job Level'] == null) return null;
 			return searchDataSet.push({
 				id: item.id,
-				lastName: item.attributes.lastName,
+				avatar: item.attributes.avatar,
 				name: item.attributes.name,
 				level: item.attributes['Job Level'],
 				email: '',
@@ -67,7 +67,7 @@ function App() {
 			if (item.type === Type.Employees) {
 				return tempArr.push({
 					id: item.id,
-					lastName: item.attributes.lastName,
+					avatar: item.attributes.avatar,
 					name: item.attributes.name,
 					level: item.attributes['Job Level'],
 					email: '',

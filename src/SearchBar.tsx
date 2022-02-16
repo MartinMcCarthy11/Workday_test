@@ -12,24 +12,43 @@ function SearchBar({ searchData }: Props) {
 		[]
 	);
 
+	const filter = (searchData: SearchResultItem[], searchTerm: string) => {
+		const result = searchData.filter(({ name }) => {
+			return name
+				.replace(/\s/g, '')
+				.toLowerCase()
+				.includes(searchTerm.toLowerCase());
+		});
+		return result;
+	};
+
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-		console.log('Test');
 		const searchTerm = e.target.value;
 		setTypedChar(searchTerm);
-
-		const filter = searchData.filter((value) => {
-			return value.name.toLowerCase().includes(searchTerm.toLowerCase());
-		});
+		const result = filter(searchData, searchTerm);
 
 		if (searchTerm === '') {
 			setFilteredResult([]);
 		} else {
-			setFilteredResult(filter);
+			setFilteredResult(result);
 		}
 	}
 
-	function showFullSearchData() {
-		setFilteredResult(searchData);
+	function handleClick(e: React.MouseEvent<HTMLInputElement>) {
+		const value = (e.target as HTMLInputElement).value;
+		if (value === '') {
+			setFilteredResult(searchData);
+		}
+
+		if (value.length > 0) {
+			const searchTerm = value;
+			const result = filter(searchData, searchTerm);
+			setFilteredResult(result);
+		}
+	}
+
+	function handleBlur() {
+		setFilteredResult([]);
 	}
 
 	return (
@@ -39,7 +58,8 @@ function SearchBar({ searchData }: Props) {
 				id='searchBarId'
 				value={typedChar}
 				onChange={handleChange}
-				onClick={showFullSearchData}
+				onClick={handleClick}
+				onBlur={handleBlur}
 			></SearchInput>
 			<SearchResultsContainer>
 				{filteredResult.length !== 0 &&
