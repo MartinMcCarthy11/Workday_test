@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { SearchResultObj } from './App';
 import SearchResultItem from './SearchResultItem';
@@ -14,6 +14,45 @@ function SearchBar({ searchData, disabled }: Props) {
 	const [typedChar, setTypedChar] = useState('');
 	const [filteredResult, setFilteredResult] = useState<SearchResultObj[]>([]);
 	const [focusIndex, setFocusIndex] = useState(-1);
+	const [isVisible, setVisibility] = useState(true);
+
+	const searchResultContainerRef = useRef<HTMLUListElement>(null);
+
+	const scrollIntoView = (position: number) => {
+		if (searchResultContainerRef) {
+			const parentElement = searchResultContainerRef.current!
+				.parentElement as HTMLUListElement;
+
+			parentElement.scrollTo({
+				top: position - 84,
+				behavior: 'smooth',
+			});
+		}
+	};
+
+	useEffect(() => {
+		if (
+			focusIndex < 0 ||
+			focusIndex > filteredResult.length ||
+			!searchResultContainerRef
+		) {
+			return () => {};
+		}
+		if (searchResultContainerRef) {
+			let listItems = Array.from(
+				searchResultContainerRef!.current!.children
+			);
+
+			listItems[focusIndex] &&
+				scrollIntoView(
+					(listItems[focusIndex] as HTMLElement).offsetTop
+				);
+		}
+	}, [filteredResult.length, focusIndex]);
+
+	const showSearchResults = () => setVisibility(true);
+
+	const hideSearchResults = () => setVisibility(false);
 
 	function filter(searchData: SearchResultObj[], searchTerm: string) {
 		let result = [] as SearchResultObj[];
@@ -38,9 +77,12 @@ function SearchBar({ searchData, disabled }: Props) {
 		const result = filter(searchData, searchTerm);
 
 		if (searchTerm === '') {
-			setFilteredResult([]);
+			hideSearchResults();
 		} else {
+			setFocusIndex(-1);
+			scrollIntoView(0);
 			setFilteredResult(result);
+			showSearchResults();
 		}
 	}
 
@@ -48,19 +90,23 @@ function SearchBar({ searchData, disabled }: Props) {
 		const value = (e.target as HTMLInputElement).value;
 		if (value === '') {
 			setFilteredResult(searchData);
+			showSearchResults();
 		}
 
 		if (value.length > 0) {
 			const searchTerm = value;
 			const result = filter(searchData, searchTerm);
+			setFocusIndex(-1);
+			scrollIntoView(0);
 			setFilteredResult(result);
+			showSearchResults();
 		}
 	}
 
 	function handleResultItemClick(e: React.MouseEvent<HTMLDivElement>) {
 		const value = e.target as HTMLDivElement;
 		setTypedChar(value.getAttribute('data-name')!);
-		setFilteredResult([]);
+		hideSearchResults();
 	}
 
 	function handleBlur(e: React.FocusEvent) {
@@ -72,7 +118,7 @@ function SearchBar({ searchData, disabled }: Props) {
 			setTypedChar(e.relatedTarget!.getAttribute('data-name')!);
 			return;
 		} else {
-			setFilteredResult([]);
+			hideSearchResults();
 		}
 	}
 
@@ -81,7 +127,7 @@ function SearchBar({ searchData, disabled }: Props) {
 			case 'Enter':
 				if (focusIndex !== -1) {
 					setTypedChar(filteredResult[focusIndex].name);
-					setFilteredResult([]);
+					hideSearchResults();
 					return;
 				}
 				break;
@@ -111,16 +157,22 @@ function SearchBar({ searchData, disabled }: Props) {
 				autoComplete='off' // To be removed
 				disabled={disabled}
 			/>
-			<SearchResultsContainer onClick={handleResultItemClick}>
-				{filteredResult.length !== 0 &&
-					filteredResult.map((item, index) => (
-						<SearchResultItem
-							focusIndex={focusIndex}
-							index={index}
-							item={item}
-							key={id()}
-						/>
-					))}
+			<SearchResultsContainer
+				onClick={handleResultItemClick}
+				isVisible={isVisible}
+			>
+				<SearchResultList ref={searchResultContainerRef}>
+					{filteredResult.length !== 0 &&
+						filteredResult.map((item, index) => (
+							<SearchResultItem
+								item={item}
+								key={id()}
+								isHighlighted={
+									focusIndex === index ? true : false
+								}
+							/>
+						))}
+				</SearchResultList>
 			</SearchResultsContainer>
 		</SearchWrapper>
 	);
@@ -138,14 +190,20 @@ const SearchInput = styled.input`
 	padding: 10px 10px 5px;
 `;
 
-const SearchResultsContainer = styled.div`
+const SearchResultsContainer = styled.div<{ isVisible: boolean }>`
 	height: 135px;
 	overflow-x: hidden;
-	padding: 2px 8px;
+	${({ isVisible }) => (isVisible ? 'display: block;' : 'display: none;')}
+	padding: 0 8px;
 
 	::-webkit-scrollbar {
 		display: none;
 	}
+`;
+
+const SearchResultList = styled.ul`
+	padding: 0;
+	margin: 0;
 `;
 
 export default SearchBar;

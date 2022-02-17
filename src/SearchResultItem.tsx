@@ -1,18 +1,16 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { SearchResultObj } from './App';
 
 interface Props {
 	item: SearchResultObj;
-	index: number;
-	focusIndex: number;
+	isHighlighted: boolean;
 }
 
-function SearchResultItem({ item, index, focusIndex }: Props) {
+const SearchResultItem = ({ item, isHighlighted }: Props) => {
 	return (
 		<ResultItem
-			focusIndex={focusIndex}
-			index={index}
+			isHighlighted={isHighlighted}
 			item={item}
 			tabIndex={0}
 			key={item.id}
@@ -25,20 +23,18 @@ function SearchResultItem({ item, index, focusIndex }: Props) {
 			</ResultDetails>
 		</ResultItem>
 	);
-}
+};
 
-const ResultItem = styled.div<Props>`
+const ResultItem = styled.li<Props>`
 	display: flex;
 	align-items: center;
-	gap: 10px;
 	padding: 12px 12px 12px 0;
 	cursor: pointer;
 	:hover {
 		background-color: antiquewhite;
 	}
 
-	${({ focusIndex, index }) =>
-		focusIndex === index && 'background-color: antiquewhite;'}
+	${({ isHighlighted }) => isHighlighted && 'background-color: antiquewhite;'}
 `;
 
 const ResultDetails = styled.div`
@@ -47,6 +43,7 @@ const ResultDetails = styled.div`
 
 	p {
 		margin: 0;
+		margin-left: 8px;
 		padding: 0;
 	}
 `;
