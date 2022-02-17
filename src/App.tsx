@@ -17,12 +17,13 @@ const apiUrl =
 
 function App() {
 	const [searchData, setSearchData] = useState<SearchResultObj[]>();
-
+	const [isLoading, setIsLoading] = useState(true);
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await axios.get<Managers>(apiUrl);
 			const result = await initialFilter(response.data);
 			setSearchData(result);
+			setIsLoading(false);
 		};
 		fetchData();
 	}, []);
@@ -100,7 +101,7 @@ function App() {
 		console.log(searchDataSet);
 		return searchDataSet;
 	};
-	return <SearchBar searchData={searchData!} />;
+	return <SearchBar disabled={isLoading} searchData={searchData!} />;
 }
 
 export default App;

@@ -6,15 +6,16 @@ import { v4 as id } from 'uuid';
 
 interface Props {
 	searchData: SearchResultObj[];
+	disabled: boolean;
 }
 
 //Use Context api instead of passing the api respobnse down
-function SearchBar({ searchData }: Props) {
+function SearchBar({ searchData, disabled }: Props) {
 	const [typedChar, setTypedChar] = useState('');
 	const [filteredResult, setFilteredResult] = useState<SearchResultObj[]>([]);
 	const [focusIndex, setFocusIndex] = useState(-1);
 
-	const filter = (searchData: SearchResultObj[], searchTerm: string) => {
+	function filter(searchData: SearchResultObj[], searchTerm: string) {
 		let result = [] as SearchResultObj[];
 		result = searchData.filter(({ name }) => {
 			return name
@@ -29,7 +30,7 @@ function SearchBar({ searchData }: Props) {
 			});
 		}
 		return result;
-	};
+	}
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const searchTerm = e.target.value;
@@ -58,8 +59,7 @@ function SearchBar({ searchData }: Props) {
 
 	function handleResultItemClick(e: React.MouseEvent<HTMLDivElement>) {
 		const value = e.target as HTMLDivElement;
-		const value1 = value as HTMLDivElement;
-		setTypedChar(value1.getAttribute('data-name')!);
+		setTypedChar(value.getAttribute('data-name')!);
 		setFilteredResult([]);
 	}
 
@@ -76,20 +76,7 @@ function SearchBar({ searchData }: Props) {
 		}
 	}
 
-	// function handleKeyUp(e: React.KeyboardEvent) {
-	// 	// if (e.key === 'Tab') {
-	// 	// 	const value = e.target as HTMLDivElement;
-	// 	// 	setTypedChar(value.getAttribute('data-name')!);
-	// 	// }
-	// 	// e.persist();
-	// 	// console.log(e.relatedTarget);
-	// 	// // if (e.relatedTarget && e.relatedTarget.id === '') {
-	// 	// // 	return;
-	// 	// // }
-	// 	// console.log(e.key);
-	// }
-
-	const handleKeyBoardNavigation = (e: React.KeyboardEvent) => {
+	function handleKeyBoardNavigation(e: React.KeyboardEvent) {
 		switch (e.key) {
 			case 'Enter':
 				if (focusIndex !== -1) {
@@ -109,7 +96,7 @@ function SearchBar({ searchData }: Props) {
 				}
 				break;
 		}
-	};
+	}
 
 	return (
 		<SearchWrapper>
@@ -122,6 +109,7 @@ function SearchBar({ searchData }: Props) {
 				onBlur={handleBlur}
 				onKeyDown={handleKeyBoardNavigation}
 				autoComplete='off' // To be removed
+				disabled={disabled}
 			/>
 			<SearchResultsContainer onClick={handleResultItemClick}>
 				{filteredResult.length !== 0 &&
