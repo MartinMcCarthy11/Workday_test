@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { SearchResultObj } from './App';
+import { SearchResultObj } from '../App';
 import SearchResultItem from './SearchResultItem';
 import { v4 as id } from 'uuid';
 
@@ -144,6 +144,7 @@ function SearchBar({ searchData, disabled }: Props) {
 		}
 	}
 
+	// const SearchResultItemMemo = useCallback(SearchResultItem, []);
 	return (
 		<SearchWrapper>
 			<SearchInput

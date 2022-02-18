@@ -1,5 +1,5 @@
-import { Managers, Type } from './ApiResponseTypes';
-import { SearchResultObj } from './App';
+import { SearchResultObj } from '../components/App';
+import { Managers, Type } from '../types/ApiResponseTypes';
 
 export const initialFilter = (data: Managers) => {
 	let searchDataSet = [] as SearchResultObj[];

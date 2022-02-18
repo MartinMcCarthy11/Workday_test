@@ -1,10 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
 import './App.css';
-import { Managers, Type } from './ApiResponseTypes';
-import SearchBar from './SearchBar';
-import { initialFilter } from './HandleApiData';
-import ManagersContext from './ManagersContext';
+import SearchBar from './searchBar/SearchBar';
+import useGetApiData from '../hooks/useGetApiData';
 
 export interface SearchResultObj {
 	id: string;
@@ -14,22 +11,16 @@ export interface SearchResultObj {
 	email: string;
 }
 
-const apiUrl =
-	'https://gist.githubusercontent.com/daviferreira/41238222ac31fe36348544ee1d4a9a5e/raw/5dc996407f6c9a6630bfcec56eee22d4bc54b518/employees.json';
-
 function App() {
 	const [searchData, setSearchData] = useState<SearchResultObj[]>();
 	const [isLoading, setIsLoading] = useState(true);
-	// const context = useContext(ManagersContext) as SearchResultObj[];
+	const searchDataResponse = useGetApiData();
 	useEffect(() => {
-		const fetchData = async () => {
-			const response = await axios.get<Managers>(apiUrl);
-			const result = await initialFilter(response.data);
-			setSearchData(result);
+		if (searchDataResponse != null) {
+			setSearchData(searchDataResponse);
 			setIsLoading(false);
-		};
-		fetchData();
-	}, []);
+		}
+	}, [searchDataResponse]);
 
 	return <SearchBar disabled={isLoading} searchData={searchData!} />;
 }
