@@ -11,24 +11,30 @@ interface Props {
 
 //Use Context api instead of passing the api respobnse down
 function SearchBar({ searchData, disabled }: Props) {
-	const [typedChar, setTypedChar] = useState('');
+	const [typedChar, setTypedChar] = useState(' ');
 	const [filteredResult, setFilteredResult] = useState<SearchResultObj[]>([]);
 	const [focusIndex, setFocusIndex] = useState(-1);
 	const [isVisible, setVisibility] = useState(true);
 
 	const searchResultContainerRef = useRef<HTMLUListElement>(null);
 
-	const scrollIntoView = (position: number) => {
+	function setSearchPhrase(phrase: string) {
+		if (phrase != null) {
+			setTypedChar(phrase);
+		}
+	}
+
+	function scrollIntoView(position: number) {
 		if (searchResultContainerRef) {
 			const parentElement = searchResultContainerRef.current!
 				.parentElement as HTMLUListElement;
 
 			parentElement.scrollTo({
-				top: position - 84,
+				top: position - 95,
 				behavior: 'smooth',
 			});
 		}
-	};
+	}
 
 	useEffect(() => {
 		if (
@@ -63,6 +69,7 @@ function SearchBar({ searchData, disabled }: Props) {
 				.includes(searchTerm.toLowerCase());
 		});
 
+		//Take out and and create entry in searchData with  concat name in lowercase
 		if (result.length === 0) {
 			result = searchData.filter(({ name }) => {
 				return name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -73,7 +80,7 @@ function SearchBar({ searchData, disabled }: Props) {
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const searchTerm = e.target.value;
-		setTypedChar(searchTerm);
+		setSearchPhrase(searchTerm);
 		const result = filter(searchData, searchTerm);
 
 		if (searchTerm === '') {
@@ -105,7 +112,7 @@ function SearchBar({ searchData, disabled }: Props) {
 
 	function handleResultItemClick(e: React.MouseEvent<HTMLDivElement>) {
 		const value = e.target as HTMLDivElement;
-		setTypedChar(value.getAttribute('data-name')!);
+		setSearchPhrase(value.getAttribute('data-name')!);
 		hideSearchResults();
 	}
 
@@ -115,7 +122,7 @@ function SearchBar({ searchData, disabled }: Props) {
 			e.relatedTarget &&
 			e.relatedTarget!.getAttribute('data-name')! !== ''
 		) {
-			setTypedChar(e.relatedTarget!.getAttribute('data-name')!);
+			setSearchPhrase(e.relatedTarget!.getAttribute('data-name')!);
 			return;
 		} else {
 			hideSearchResults();
@@ -125,8 +132,9 @@ function SearchBar({ searchData, disabled }: Props) {
 	function handleKeyBoardNavigation(e: React.KeyboardEvent) {
 		switch (e.key) {
 			case 'Enter':
+				console.log(e);
 				if (focusIndex !== -1) {
-					setTypedChar(filteredResult[focusIndex].name);
+					setSearchPhrase(filteredResult[focusIndex].name);
 					hideSearchResults();
 					return;
 				}
@@ -144,20 +152,24 @@ function SearchBar({ searchData, disabled }: Props) {
 		}
 	}
 
-	// const SearchResultItemMemo = useCallback(SearchResultItem, []);
+	const SearchResultItemMemo = useCallback(SearchResultItem, []);
 	return (
 		<SearchWrapper>
 			<SearchInput
 				type='text'
 				id='searchBarId'
-				value={typedChar}
+				value={typedChar ? typedChar : ''}
 				onChange={handleChange}
 				onClick={handleClick}
 				onBlur={handleBlur}
 				onKeyDown={handleKeyBoardNavigation}
 				autoComplete='off' // To be removed
 				disabled={disabled}
-			/>
+				placeholder='Choose Manager'
+				aria-placeholder='Choose Manager'
+			>
+				{/*sanitize input*/}
+			</SearchInput>
 			<SearchResultsContainer
 				onClick={handleResultItemClick}
 				isVisible={isVisible}
@@ -165,9 +177,9 @@ function SearchBar({ searchData, disabled }: Props) {
 				<SearchResultList ref={searchResultContainerRef}>
 					{filteredResult.length !== 0 &&
 						filteredResult.map((item, index) => (
-							<SearchResultItem
+							<SearchResultItemMemo
 								item={item}
-								key={id()}
+								key={item.id}
 								isHighlighted={
 									focusIndex === index ? true : false
 								}
@@ -188,7 +200,9 @@ const SearchWrapper = styled.section`
 `;
 
 const SearchInput = styled.input`
-	padding: 10px 10px 5px;
+	position: relative;
+	padding: 12px 12px;
+	border-radius: 5px;
 `;
 
 const SearchResultsContainer = styled.div<{ isVisible: boolean }>`

@@ -11,7 +11,7 @@ interface Props {
 const SearchResultItem = ({ item, isHighlighted }: Props) => {
 	function getInitials(name: string) {
 		let initials = name.split(' ').map((str) => str[0]);
-		console.log(initials);
+		// console.log(initials);
 		return initials;
 	}
 
