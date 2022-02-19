@@ -155,7 +155,7 @@ function SearchBar() {
 		}
 	}
 
-	const SearchResultItemMemo = useCallback(SearchResultItem, []);
+	// const SearchResultItemMemo = useCallback(SearchResultItem, []);
 	return (
 		<SearchWrapper data-testid='search-bar-test-id'>
 			<SearchInput
@@ -177,7 +177,7 @@ function SearchBar() {
 				>
 					{filteredResult.length !== 0 &&
 						filteredResult.map((item, index) => (
-							<SearchResultItemMemo
+							<SearchResultItem
 								item={item}
 								key={item.id}
 								isHighlighted={

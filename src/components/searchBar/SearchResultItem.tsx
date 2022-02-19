@@ -23,6 +23,7 @@ const SearchResultItem = ({ item, isHighlighted }: Props) => {
 			tabIndex={0}
 			key={item.id}
 			data-name={item.name}
+			data-testid="search-result-testid"
 		>
 			<ResultAvatar data-name={item.name} isHighlighted={isHighlighted}>
 				{getInitials(item.name)}
