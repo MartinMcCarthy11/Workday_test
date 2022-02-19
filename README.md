@@ -1,46 +1,35 @@
-# Getting Started with Create React App
+# Workday-test
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Setup
+1- Clone the repo git clone https://github.com/MartinMcCarthy11/Dataminr-test
 
-## Available Scripts
+2- `yarn install` or `npm install` to install npm packages
 
-In the project directory, you can run:
+3- Run app by using `yarn start` or `npm run start`, then open http://localhost:3000 to view it in the browser.
 
-### `npm start`
+4- `yarn test` or  `npm run test` to run component level tests
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+5- `yarn run cypress` or `npm run cypress` to run e2e test
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+6- View the app live at https://dataminr-test.vercel.app/
 
-### `npm test`
+Thanks for taking the time to look through this project :+1:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+## Notes
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Data
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- I noticed that the response from the api was inconsistent, as the id of the {type: employee} was off by 1 to the id of the {type: account}. If this was for production I would investigate why the data was inconsistent and correct it at source. As the ideal way of matching email addresses to the managers would be by id comparison.
+- As a result I implemented 2 approaches to transforming the api response into usable data. I've commented out the approach where i am manipulating the id of the accounts object as this relies on the assumption that all of the data we will recieve will also be similarly inconsistent.
+- The approach I took negates the use of ids by sorting both the list of employees and emails and so works in this situation.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Architecture Choices
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- I choose to use typescript for a number of reasons
+  - Assuming this is a live application typescript gives me more confidence that certain types of errors won't make it to production
+  - It gives tighter control(gaurd rails) as to how the components are used, allowing the solution to scale better.
+  - It improves developer experience through intelli-sense, pre-defined object structure and a compiler errors
+- I did not use redux as I have very little experience using it (excited to learn though :grin:). Instead I choose to use context api in order to handle the global state that the search bar needs.
+- I extracted the api call out to a custom hook and used that it my context provider. This means my components to only need to manage local state.
+- The app is largely accessible and navigable by keyboard, both by up/down arrows and by tab.
