@@ -3,13 +3,14 @@ import { SearchResultObj } from '../../helpers/HandleApiData';
 
 interface Props extends StyleProps {
 	item: SearchResultObj;
+	onKeyDown: React.KeyboardEventHandler;
 }
 
 interface StyleProps {
 	isHighlighted: boolean;
 }
 
-const SearchResultItem = ({ item, isHighlighted }: Props) => {
+const SearchResultItem = ({ item, isHighlighted, onKeyDown }: Props) => {
 	function getInitials(name: string) {
 		let initials = name.split(' ').map((str) => str[0]);
 		// console.log(initials);
@@ -23,7 +24,9 @@ const SearchResultItem = ({ item, isHighlighted }: Props) => {
 			tabIndex={0}
 			key={item.id}
 			data-name={item.name}
-			data-testid="search-result-testid"
+			data-testid='search-result-testid'
+			aria-label={item.name}
+			onKeyDown={onKeyDown}
 		>
 			<ResultAvatar data-name={item.name} isHighlighted={isHighlighted}>
 				{getInitials(item.name)}
@@ -36,6 +39,21 @@ const SearchResultItem = ({ item, isHighlighted }: Props) => {
 	);
 };
 
+const ResultAvatar = styled.div<StyleProps>`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 40px;
+	height: 40px;
+	color: white;
+
+	${({ isHighlighted }) =>
+		isHighlighted
+			? 'background-color: #62b6d2;'
+			: 'background-color: #fca25f;'}
+`;
+
 const ResultItem = styled.li<Props>`
 	display: flex;
 	align-items: center;
@@ -46,6 +64,14 @@ const ResultItem = styled.li<Props>`
 		background-color: #d1fcee;
 	}
 	border-top: 1px solid rgba(0, 0, 0, 0.2);
+
+	:focus {
+		background-color: #d1fcee;
+		${ResultAvatar} {
+			background-color: #62b6d2;
+		}
+	}
+
 	${({ isHighlighted }) => isHighlighted && 'background-color:  #d1fcee;'}
 `;
 
@@ -62,20 +88,6 @@ const ResultDetails = styled.div<StyleProps>`
 	p:first-child {
 		${({ isHighlighted }) => isHighlighted && 'color: #fca25f;'}
 	}
-`;
-
-const ResultAvatar = styled.div<StyleProps>`
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	width: 40px;
-	height: 40px;
-	color: white;
-	${({ isHighlighted }) =>
-		isHighlighted
-			? 'background-color: #62b6d2;'
-			: 'background-color: #fca25f;'}
 `;
 
 export default SearchResultItem;

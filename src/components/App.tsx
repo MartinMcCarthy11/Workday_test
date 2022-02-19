@@ -1,4 +1,3 @@
-import './App.css';
 import SearchBar from './searchBar/SearchBar';
 import { ManagersProvider } from '../context/ManagersContext';
 

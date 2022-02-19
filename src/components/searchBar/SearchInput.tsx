@@ -24,7 +24,7 @@ function SearchInput({
 	return (
 		<InputContainer>
 			<Input
-				type='text'
+				type='search'
 				id='searchBarId'
 				value={value}
 				onChange={onChange}
@@ -33,6 +33,7 @@ function SearchInput({
 				onKeyDown={onKeyDown}
 				autoComplete='off'
 				disabled={isLoading}
+				aria-label='Manager search input'
 			/>
 			{isVisible ? <FaChevronUp /> : <FaChevronDown />}
 		</InputContainer>
@@ -48,6 +49,10 @@ const InputContainer = styled.div`
 	border: 1px solid black;
 	border-radius: 5px;
 	box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.04);
+`;
+
+const Label = styled.label`
+	visibility: hidden;
 `;
 
 const Input = styled.input`

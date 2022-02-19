@@ -31,7 +31,7 @@ function SearchBar() {
 				.parentElement as HTMLUListElement;
 
 			parentElement.scrollTo({
-				top: position - 95,
+				top: position - 102,
 				behavior: 'smooth',
 			});
 		}
@@ -119,7 +119,6 @@ function SearchBar() {
 	}
 
 	function handleBlur(e: React.FocusEvent) {
-		console.log('Handle Blur');
 		e.persist();
 		if (
 			e.relatedTarget &&
@@ -133,9 +132,13 @@ function SearchBar() {
 	}
 
 	function handleKeyBoardNavigation(e: React.KeyboardEvent) {
+		const value = (e.target as HTMLInputElement).value;
 		switch (e.key) {
 			case 'Enter':
-				console.log(e);
+				if (value === '') {
+					setFilteredResult(searchData!);
+					showSearchResults();
+				}
 				if (focusIndex !== -1) {
 					setSearchPhrase(filteredResult[focusIndex].name);
 					hideSearchResults();
@@ -152,6 +155,16 @@ function SearchBar() {
 					setFocusIndex(focusIndex + 1);
 				}
 				break;
+		}
+	}
+
+	function handleSearchItemKeyPress(e: React.KeyboardEvent<HTMLDivElement>) {
+		if (e.key === 'Enter') {
+			const value = (e.target as HTMLDivElement).getAttribute(
+				'data-name'
+			);
+			setSearchPhrase(value as string);
+			hideSearchResults();
 		}
 	}
 
@@ -183,6 +196,7 @@ function SearchBar() {
 								isHighlighted={
 									focusIndex === index ? true : false
 								}
+								onKeyDown={handleSearchItemKeyPress}
 							/>
 						))}
 				</SearchResultList>
