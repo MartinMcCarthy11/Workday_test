@@ -79,8 +79,8 @@ function SearchBar() {
 		const searchTerm = e.target.value;
 		setSearchPhrase(searchTerm);
 		const result = filter(searchData!, searchTerm);
-
-		if (searchTerm === '') {
+		console.log('HandleChange');
+		if (searchTerm === '' || filteredResult.length === 0) {
 			hideSearchResults();
 		} else {
 			setFocusIndex(-1);
@@ -92,17 +92,19 @@ function SearchBar() {
 
 	function handleClick(e: React.MouseEvent<HTMLInputElement>) {
 		const value = (e.target as HTMLInputElement).value;
-		if (value === '') {
-			setFilteredResult(searchData!);
-			showSearchResults();
-		}
-
-		if (value.length > 0) {
+		if (value !== '' && filteredResult.length === 0) {
+			hideSearchResults();
+		} else if (value.length > 0) {
 			const searchTerm = value;
 			const result = filter(searchData!, searchTerm);
 			setFocusIndex(-1);
 			scrollIntoView(0);
 			setFilteredResult(result);
+			showSearchResults();
+		}
+
+		if (value === '') {
+			setFilteredResult(searchData!);
 			showSearchResults();
 		}
 	}

@@ -37,7 +37,7 @@ export default App;
  *            --> search item component
  *
  * **** BUGS ****
- * TODO : when you navigate down with keyboard list should scroll with you 
+ * TODO : when you navigate down with keyboard list should scroll with you  -- fixed
  * disable input while loading -- FIXED
  * 
  * 
