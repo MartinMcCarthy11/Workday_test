@@ -57,16 +57,6 @@ export function sortEmployeeList(data: SearchResultObj[]): SearchResultObj[] {
 	return data;
 }
 
-export function sortEmailArray(data: string[]) {
-	let result = [] as string[];
-	result = data.sort((a: string, b: string) => {
-		if (a < b) return -1;
-		if (a > b) return 1;
-		return 0;
-	});
-	return result;
-}
-
 export function filterEmailArray(data: Managers) {
 	let result = [] as string[];
 	data.included.filter((item) => {
@@ -78,6 +68,16 @@ export function filterEmailArray(data: Managers) {
 		}
 	});
 
+	return result;
+}
+
+export function sortEmailArray(data: string[]) {
+	let result = [] as string[];
+	result = data.sort((a: string, b: string) => {
+		if (a < b) return -1;
+		if (a > b) return 1;
+		return 0;
+	});
 	return result;
 }
 

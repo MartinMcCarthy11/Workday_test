@@ -15,7 +15,7 @@ function SearchBar() {
 	const [typedChar, setTypedChar] = useState('');
 	const [filteredResult, setFilteredResult] = useState<SearchResultObj[]>([]);
 	const [focusIndex, setFocusIndex] = useState(-1);
-	const [isVisible, setVisibility] = useState(true);
+	const [isVisible, setVisibility] = useState(false);
 	const { searchData }: ValueContext = useContext(ManagersContext);
 	const searchResultContainerRef = useRef<HTMLUListElement>(null);
 
@@ -93,8 +93,10 @@ function SearchBar() {
 	function handleClick(e: React.MouseEvent<HTMLInputElement>) {
 		const value = (e.target as HTMLInputElement).value;
 		if (value !== '' && filteredResult.length === 0) {
+			console.log(1);
 			hideSearchResults();
 		} else if (value.length > 0) {
+			console.log(3);
 			const searchTerm = value;
 			const result = filter(searchData!, searchTerm);
 			setFocusIndex(-1);
@@ -104,6 +106,7 @@ function SearchBar() {
 		}
 
 		if (value === '') {
+			console.log(2);
 			setFilteredResult(searchData!);
 			showSearchResults();
 		}
@@ -116,6 +119,7 @@ function SearchBar() {
 	}
 
 	function handleBlur(e: React.FocusEvent) {
+		console.log('Handle Blur');
 		e.persist();
 		if (
 			e.relatedTarget &&
@@ -153,7 +157,7 @@ function SearchBar() {
 
 	const SearchResultItemMemo = useCallback(SearchResultItem, []);
 	return (
-		<SearchWrapper>
+		<SearchWrapper data-testid='search-bar-test-id'>
 			<SearchInput
 				value={typedChar ? typedChar : ''}
 				onChange={handleChange}
@@ -165,8 +169,12 @@ function SearchBar() {
 			<SearchResultsContainer
 				onClick={handleResultItemClick}
 				isVisible={isVisible}
+				data-testid='search-results-container-testid'
 			>
-				<SearchResultList ref={searchResultContainerRef}>
+				<SearchResultList
+					ref={searchResultContainerRef}
+					data-testid='search-results-ul-testid'
+				>
 					{filteredResult.length !== 0 &&
 						filteredResult.map((item, index) => (
 							<SearchResultItemMemo
