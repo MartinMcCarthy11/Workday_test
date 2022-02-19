@@ -8,22 +8,15 @@ import React, {
 import styled from 'styled-components';
 import SearchResultItem from './SearchResultItem';
 import ManagersContext, { ValueContext } from '../../context/ManagersContext';
+import { SearchResultObj } from '../../helpers/HandleApiData';
+import SearchInput from './SearchInput';
 
-export interface SearchResultObj {
-	id: string;
-	avatar: {} | null;
-	name: string;
-	level: string;
-	email: string;
-}
-
-//Use Context api instead of passing the api respobnse down
 function SearchBar() {
 	const [typedChar, setTypedChar] = useState('');
 	const [filteredResult, setFilteredResult] = useState<SearchResultObj[]>([]);
 	const [focusIndex, setFocusIndex] = useState(-1);
 	const [isVisible, setVisibility] = useState(true);
-	const { searchData, isLoading }: ValueContext = useContext(ManagersContext);
+	const { searchData }: ValueContext = useContext(ManagersContext);
 	const searchResultContainerRef = useRef<HTMLUListElement>(null);
 
 	function setSearchPhrase(phrase: string) {
@@ -70,14 +63,10 @@ function SearchBar() {
 
 	function filter(searchData: SearchResultObj[], searchTerm: string) {
 		let result = [] as SearchResultObj[];
-		result = searchData.filter(({ name }) => {
-			return name
-				.replace(/\s/g, '')
-				.toLowerCase()
-				.includes(searchTerm.toLowerCase());
+		result = searchData.filter(({ searchName }) => {
+			return searchName.includes(searchTerm.toLowerCase());
 		});
 
-		//Take out and and create entry in searchData with  concat name in lowercase
 		if (result.length === 0) {
 			result = searchData.filter(({ name }) => {
 				return name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -164,15 +153,12 @@ function SearchBar() {
 	return (
 		<SearchWrapper>
 			<SearchInput
-				type='text'
-				id='searchBarId'
 				value={typedChar ? typedChar : ''}
 				onChange={handleChange}
 				onClick={handleClick}
 				onBlur={handleBlur}
 				onKeyDown={handleKeyBoardNavigation}
-				autoComplete='off' // To be removed
-				disabled={isLoading}
+				isVisible={isVisible}
 			/>
 			<SearchResultsContainer
 				onClick={handleResultItemClick}
@@ -203,18 +189,13 @@ const SearchWrapper = styled.section`
 	margin: 50px auto;
 `;
 
-const SearchInput = styled.input`
-	position: relative;
-	padding: 12px 12px;
-	border-radius: 5px;
-`;
-
 const SearchResultsContainer = styled.div<{ isVisible: boolean }>`
-	height: 135px;
+	max-height: 137px;
 	overflow-x: hidden;
 	${({ isVisible }) => (isVisible ? 'display: block;' : 'display: none;')}
-	padding: 0 8px;
-
+	border: 1px solid black;
+	border-radius: 5px;
+	box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.04);
 	::-webkit-scrollbar {
 		display: none;
 	}

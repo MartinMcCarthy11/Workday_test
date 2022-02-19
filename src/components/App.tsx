@@ -2,14 +2,6 @@ import './App.css';
 import SearchBar from './searchBar/SearchBar';
 import { ManagersProvider } from '../context/ManagersContext';
 
-export interface SearchResultObj {
-	id: string;
-	avatar: {} | null;
-	name: string;
-	level: string;
-	email: string;
-}
-
 function App() {
 	return (
 		<ManagersProvider>

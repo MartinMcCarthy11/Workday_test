@@ -1,5 +1,13 @@
-import { SearchResultObj } from '../components/App';
 import { Managers, Type } from '../types/ApiResponseTypes';
+
+export interface SearchResultObj {
+	id: string;
+	avatar: {} | null;
+	name: string;
+	searchName: string;
+	level: string;
+	email: string;
+}
 
 export function filterEmployees(data: Managers): SearchResultObj[] {
 	let result = [] as SearchResultObj[];
@@ -9,6 +17,9 @@ export function filterEmployees(data: Managers): SearchResultObj[] {
 			id: item.id,
 			avatar: item.attributes.avatar,
 			name: item.attributes.name,
+			searchName: item.attributes.firstName
+				.concat(item.attributes.lastName)
+				.toLowerCase(),
 			level: item.attributes['Job Level'],
 			email: '',
 		} as SearchResultObj);
@@ -24,6 +35,9 @@ export function filterEmployeesFromIncluded(data: Managers): SearchResultObj[] {
 				id: item.id,
 				avatar: item.attributes.avatar,
 				name: item.attributes.name,
+				searchName: item.attributes
+					.firstName!.concat(item.attributes.lastName!)
+					.toLowerCase(),
 				level: item.attributes['Job Level'],
 				email: '',
 			} as SearchResultObj);
