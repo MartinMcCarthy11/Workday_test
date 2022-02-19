@@ -46,13 +46,9 @@ const InputContainer = styled.div`
 	align-items: center;
 	padding: 2px;
 	padding-right: 8px;
-	border: 1px solid black;
+	border: 1px solid #c2c2c2;
 	border-radius: 5px;
 	box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.04);
-`;
-
-const Label = styled.label`
-	visibility: hidden;
 `;
 
 const Input = styled.input`

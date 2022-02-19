@@ -217,7 +217,7 @@ const SearchResultsContainer = styled.div<{ isVisible: boolean }>`
 	max-height: 137px;
 	overflow-x: hidden;
 	${({ isVisible }) => (isVisible ? 'display: block;' : 'display: none;')}
-	border: 1px solid black;
+	border: 1px solid #c2c2c2;
 	border-radius: 5px;
 	box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.04);
 	::-webkit-scrollbar {
