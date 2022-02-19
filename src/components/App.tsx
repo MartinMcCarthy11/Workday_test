@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
 import './App.css';
 import SearchBar from './searchBar/SearchBar';
-import useGetApiData from '../hooks/useGetApiData';
+import { ManagersProvider } from '../context/ManagersContext';
 
 export interface SearchResultObj {
 	id: string;
@@ -12,17 +11,11 @@ export interface SearchResultObj {
 }
 
 function App() {
-	const [searchData, setSearchData] = useState<SearchResultObj[]>();
-	const [isLoading, setIsLoading] = useState(true);
-	const searchDataResponse = useGetApiData();
-	useEffect(() => {
-		if (searchDataResponse != null) {
-			setSearchData(searchDataResponse);
-			setIsLoading(false);
-		}
-	}, [searchDataResponse]);
-
-	return <SearchBar disabled={isLoading} searchData={searchData!} />;
+	return (
+		<ManagersProvider>
+			<SearchBar />
+		</ManagersProvider>
+	);
 }
 
 export default App;

@@ -1,21 +1,29 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+	useCallback,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from 'react';
 import styled from 'styled-components';
-import { SearchResultObj } from '../App';
 import SearchResultItem from './SearchResultItem';
-import { v4 as id } from 'uuid';
+import ManagersContext, { ValueContext } from '../../context/ManagersContext';
 
-interface Props {
-	searchData: SearchResultObj[];
-	disabled: boolean;
+export interface SearchResultObj {
+	id: string;
+	avatar: {} | null;
+	name: string;
+	level: string;
+	email: string;
 }
 
 //Use Context api instead of passing the api respobnse down
-function SearchBar({ searchData, disabled }: Props) {
-	const [typedChar, setTypedChar] = useState(' ');
+function SearchBar() {
+	const [typedChar, setTypedChar] = useState('');
 	const [filteredResult, setFilteredResult] = useState<SearchResultObj[]>([]);
 	const [focusIndex, setFocusIndex] = useState(-1);
 	const [isVisible, setVisibility] = useState(true);
-
+	const { searchData, isLoading }: ValueContext = useContext(ManagersContext);
 	const searchResultContainerRef = useRef<HTMLUListElement>(null);
 
 	function setSearchPhrase(phrase: string) {
@@ -81,7 +89,7 @@ function SearchBar({ searchData, disabled }: Props) {
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const searchTerm = e.target.value;
 		setSearchPhrase(searchTerm);
-		const result = filter(searchData, searchTerm);
+		const result = filter(searchData!, searchTerm);
 
 		if (searchTerm === '') {
 			hideSearchResults();
@@ -96,13 +104,13 @@ function SearchBar({ searchData, disabled }: Props) {
 	function handleClick(e: React.MouseEvent<HTMLInputElement>) {
 		const value = (e.target as HTMLInputElement).value;
 		if (value === '') {
-			setFilteredResult(searchData);
+			setFilteredResult(searchData!);
 			showSearchResults();
 		}
 
 		if (value.length > 0) {
 			const searchTerm = value;
-			const result = filter(searchData, searchTerm);
+			const result = filter(searchData!, searchTerm);
 			setFocusIndex(-1);
 			scrollIntoView(0);
 			setFilteredResult(result);
@@ -164,12 +172,8 @@ function SearchBar({ searchData, disabled }: Props) {
 				onBlur={handleBlur}
 				onKeyDown={handleKeyBoardNavigation}
 				autoComplete='off' // To be removed
-				disabled={disabled}
-				placeholder='Choose Manager'
-				aria-placeholder='Choose Manager'
-			>
-				{/*sanitize input*/}
-			</SearchInput>
+				disabled={isLoading}
+			/>
 			<SearchResultsContainer
 				onClick={handleResultItemClick}
 				isVisible={isVisible}
