@@ -1,7 +1,7 @@
 # Workday-test
 
 ## Setup
-1- Clone the repo git clone https://github.com/MartinMcCarthy11/Dataminr-test
+1- Clone the repo git clone https://github.com/MartinMcCarthy11/Workday_test
 
 2- `yarn install` or `npm install` to install npm packages
 
@@ -11,7 +11,7 @@
 
 5- `yarn run cypress` or `npm run cypress` to run e2e test
 
-6- View the app live at https://dataminr-test.vercel.app/
+6- View the app live at https://workday-test.vercel.app/
 
 Thanks for taking the time to look through this project :+1:
 
