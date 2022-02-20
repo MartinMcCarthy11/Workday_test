@@ -33,7 +33,7 @@ Thanks for taking the time to look through this project :+1:
 - I did not use redux as I have very little experience using it (excited to learn though :grin:). Instead I choose to use context api in order to handle the global state that the search bar needs.
 - I extracted the api call out to a custom hook and used that it my context provider. This means my components only need to manage their local state.
 - The app is largely accessible and navigable by keyboard, both by up/down arrows and by tab.
-- I've noticed that the SearchResultItem components re-render each time you navigate with the keyboard. this is due to an onkeydown function being passed to the SearchresultItem for accessibility reasons(being able to hit enter when tab navigating). This something I would rectify before releasing to live.
+- I've noticed that the SearchResultItem components re-render each time you navigate with the keyboard. This is due to an onkeydown function being passed to the SearchresultItem for accessibility reasons(being able to hit enter when tab navigating). This something I would rectify before releasing to live.
 
 ### Tech used
 
