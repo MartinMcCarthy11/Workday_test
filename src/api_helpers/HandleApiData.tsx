@@ -101,9 +101,11 @@ export function removeDuplicateSearchResultObjects(
 	transformedEmployeeList: SearchResultObj[]
 ) {
 	let result = [] as SearchResultObj[];
-	result = transformedEmployeeList.filter(
-		(item, index, self) => index === self.findIndex((t) => t.id === item.id)
-	);
+	result = Array.from(new Set(transformedEmployeeList.map((a) => a.id))).map(
+		(id) => {
+			return transformedEmployeeList.find((a) => a.id === id);
+		}
+	) as SearchResultObj[];
 	return result;
 }
 
@@ -204,9 +206,11 @@ export const initialFilter = (data: Managers) => {
 
 // 	transformedEmployeeList = [...transformedEmployeeList, ...tempArray];
 
-// 	transformedEmployeeList = transformedEmployeeList.filter(
-// 		(item, index, self) => index === self.findIndex((t) => t.id === item.id)
-// 	);
+// 	transformedEmployeeList = Array.from(new Set(transformedEmployeeList.map((a) => a.id))).map(
+// 	(id) => {
+// 		return transformedEmployeeList.find((a) => a.id === id);
+// 	}
+// ) as SearchResultObj[];
 
 // 	console.log(transformedEmployeeList);
 
