@@ -1,5 +1,5 @@
 import { render, screen, cleanup } from '@testing-library/react';
-import { SearchResultObj } from '../../helpers/HandleApiData';
+import { SearchResultObj } from '../../api_helpers/HandleApiData';
 import SearchResultItem from './SearchResultItem';
 
 afterEach(cleanup);

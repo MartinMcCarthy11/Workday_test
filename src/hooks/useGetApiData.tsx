@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { initialFilter, SearchResultObj } from '../helpers/HandleApiData';
+import { initialFilter, SearchResultObj } from '../api_helpers/HandleApiData';
 import { Managers } from '../types/ApiResponseTypes';
 
 const apiUrl =

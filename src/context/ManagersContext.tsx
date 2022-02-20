@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SearchResultObj } from '../helpers/HandleApiData';
+import { SearchResultObj } from '../api_helpers/HandleApiData';
 import useGetApiData from '../hooks/useGetApiData';
 
 const ManagersContext = React.createContext({});

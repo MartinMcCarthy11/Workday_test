@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { SearchResultObj } from '../../helpers/HandleApiData';
+import { SearchResultObj } from '../../api_helpers/HandleApiData';
 
 interface Props extends StyleProps {
 	item: SearchResultObj;

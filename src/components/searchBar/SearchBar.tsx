@@ -8,8 +8,8 @@ import React, {
 import styled from 'styled-components';
 import SearchResultItem from './SearchResultItem';
 import ManagersContext, { ValueContext } from '../../context/ManagersContext';
-import { SearchResultObj } from '../../helpers/HandleApiData';
 import SearchInput from './SearchInput';
+import { SearchResultObj } from '../../api_helpers/HandleApiData';
 
 function SearchBar() {
 	const [typedChar, setTypedChar] = useState('');
@@ -79,7 +79,7 @@ function SearchBar() {
 		const searchTerm = e.target.value;
 		setSearchPhrase(searchTerm);
 		const result = filter(searchData!, searchTerm);
-
+		console.log('handle change');
 		if (searchTerm === '' || filteredResult.length === 0) {
 			hideSearchResults();
 		} else {
@@ -116,6 +116,7 @@ function SearchBar() {
 	}
 
 	function handleBlur(e: React.FocusEvent) {
+		console.log('handle blur');
 		e.persist();
 		if (
 			e.relatedTarget &&
