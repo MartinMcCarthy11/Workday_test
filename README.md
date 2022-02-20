@@ -1,7 +1,7 @@
 # Workday-test
 
 ## Setup
-1- Clone the repo git clone https://github.com/MartinMcCarthy11/Dataminr-test
+1- Clone the repo git clone https://github.com/MartinMcCarthy11/Workday_test
 
 2- `yarn install` or `npm install` to install npm packages
 
@@ -11,7 +11,7 @@
 
 5- `yarn run cypress` or `npm run cypress` to run e2e test
 
-6- View the app live at https://dataminr-test.vercel.app/
+6- View the app live at https://workday-test.vercel.app/
 
 Thanks for taking the time to look through this project :+1:
 
@@ -21,7 +21,7 @@ Thanks for taking the time to look through this project :+1:
 ### Data
 
 - I noticed that the response from the api was inconsistent, as the id of the {type: employee} was off by 1 to the id of the {type: account}. If this was for production I would investigate why the data was inconsistent and correct it at source. As the ideal way of matching email addresses to the managers would be by id comparison.
-- As a result I implemented 2 approaches to transforming the api response into usable data. I've commented out the approach where i am manipulating the id of the accounts object as this relies on the assumption that all of the data we will recieve will also be similarly inconsistent.
+- As a result I implemented 2 approaches to transforming the api response into usable data. I've commented out the approach where I am manipulating the id of the accounts object as this relies on the assumption that all of the data which we will recieve will also be similarly inconsistent.
 - The approach I took negates the use of ids by sorting both the list of employees and emails and so works in this situation.
 
 ### Architecture Choices
