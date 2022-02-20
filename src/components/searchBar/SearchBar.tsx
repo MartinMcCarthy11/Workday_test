@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import SearchResultItem from './SearchResultItem';
 import ManagersContext, { ValueContext } from '../../context/ManagersContext';
@@ -32,15 +32,8 @@ function SearchBar() {
 	}
 
 	useEffect(() => {
-		if (
-			focusIndex < 0 ||
-			focusIndex > filteredResult.length ||
-			!searchResultContainerRef
-		) {
-			return () => {};
-		}
 		if (searchResultContainerRef) {
-			let listItems = Array.from(
+			const listItems = Array.from(
 				searchResultContainerRef!.current!.children
 			);
 
@@ -57,15 +50,11 @@ function SearchBar() {
 
 	function filter(searchData: SearchResultObj[], searchTerm: string) {
 		let result = [] as SearchResultObj[];
+		const sanitizedSearchTerm = searchTerm.split(' ').join('');
 		result = searchData.filter(({ searchName }) => {
-			return searchName.includes(searchTerm.toLowerCase());
+			return searchName.includes(sanitizedSearchTerm.toLowerCase());
 		});
 
-		if (result.length === 0) {
-			result = searchData.filter(({ name }) => {
-				return name.toLowerCase().includes(searchTerm.toLowerCase());
-			});
-		}
 		return result;
 	}
 

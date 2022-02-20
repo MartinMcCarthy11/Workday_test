@@ -36,6 +36,7 @@ function SearchInput({
 				placeholder='Choose Manager'
 				aria-placeholder='Choose Manager'
 				aria-label='Manager search input'
+				data-testid='search-input-testid'
 			/>
 			{isVisible ? <FaChevronUp /> : <FaChevronDown />}
 		</InputContainer>

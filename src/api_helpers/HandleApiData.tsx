@@ -23,6 +23,7 @@ export function filterEmployees(data: Managers): SearchResultObj[] {
 			level: item.attributes['Job Level'],
 			email: '',
 		} as SearchResultObj);
+		return null;
 	});
 	return result;
 }
@@ -42,6 +43,7 @@ export function filterEmployeesFromIncluded(data: Managers): SearchResultObj[] {
 				email: '',
 			} as SearchResultObj);
 		}
+		return null;
 	});
 	return result;
 }
@@ -66,6 +68,7 @@ export function filterEmailArray(data: Managers) {
 		) {
 			result.push(item.attributes.email!);
 		}
+		return null;
 	});
 
 	return result;
