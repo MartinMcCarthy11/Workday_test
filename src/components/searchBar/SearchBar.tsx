@@ -31,7 +31,7 @@ function SearchBar() {
 				.parentElement as HTMLUListElement;
 
 			parentElement.scrollTo({
-				top: position - 102,
+				top: position - 95,
 				behavior: 'smooth',
 			});
 		}
@@ -211,7 +211,7 @@ const SearchWrapper = styled.section`
 `;
 
 const SearchResultsContainer = styled.div<{ isVisible: boolean }>`
-	max-height: 137px;
+	max-height: 135px;
 	overflow-x: hidden;
 	${({ isVisible }) => (isVisible ? 'display: block;' : 'display: none;')}
 	border: 1px solid #c2c2c2;
