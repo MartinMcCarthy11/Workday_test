@@ -1,10 +1,4 @@
-import React, {
-	useCallback,
-	useContext,
-	useEffect,
-	useRef,
-	useState,
-} from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import SearchResultItem from './SearchResultItem';
 import ManagersContext, { ValueContext } from '../../context/ManagersContext';
@@ -79,7 +73,6 @@ function SearchBar() {
 		const searchTerm = e.target.value;
 		setSearchPhrase(searchTerm);
 		const result = filter(searchData!, searchTerm);
-		console.log('handle change');
 		if (searchTerm === '' || filteredResult.length === 0) {
 			hideSearchResults();
 		} else {
@@ -116,7 +109,6 @@ function SearchBar() {
 	}
 
 	function handleBlur(e: React.FocusEvent) {
-		console.log('handle blur');
 		e.persist();
 		if (
 			e.relatedTarget &&

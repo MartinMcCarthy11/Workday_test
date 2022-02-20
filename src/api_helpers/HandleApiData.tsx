@@ -137,8 +137,6 @@ export const initialFilter = (data: Managers) => {
 	transformedEmployeeList = removeDuplicateSearchResultObjects(
 		transformedEmployeeList
 	);
-
-	console.log(transformedEmployeeList);
 	return transformedEmployeeList;
 };
 
