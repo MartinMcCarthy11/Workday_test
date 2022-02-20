@@ -33,6 +33,8 @@ function SearchInput({
 				onKeyDown={onKeyDown}
 				autoComplete='off'
 				disabled={isLoading}
+				placeholder='Choose Manager'
+				aria-placeholder='Choose Manager'
 				aria-label='Manager search input'
 			/>
 			{isVisible ? <FaChevronUp /> : <FaChevronDown />}
