@@ -132,6 +132,8 @@ export const initialFilter = (data: Managers) => {
 
 	//Combine temp arr and filtered array
 	transformedEmployeeList = [...transformedEmployeeList, ...tempArray];
+
+	//Remove any duplicate objects
 	transformedEmployeeList = removeDuplicateSearchResultObjects(
 		transformedEmployeeList
 	);
@@ -140,9 +142,11 @@ export const initialFilter = (data: Managers) => {
 	return transformedEmployeeList;
 };
 
-//Explain that the data is a mismatch regarding ids, explain what i've done and what else you could do.
-//More descriptive name transformed data set??
-//implement via data.id then comment out and explain
+/**
+ * Below is the process for manipulating the object {type: accounts} id and then comparing employees by id.
+ * As mentioned in the readme I have not taken this approach as it works off the assumption that all of the data we receive will also be off by 1.
+ * In a true production setting I would investigate and correct the data at source and then match the email to the employee by id.
+ */
 
 // interface emailObj {
 // 	email: string;

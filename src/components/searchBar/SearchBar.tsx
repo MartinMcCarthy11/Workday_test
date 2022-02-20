@@ -79,7 +79,7 @@ function SearchBar() {
 		const searchTerm = e.target.value;
 		setSearchPhrase(searchTerm);
 		const result = filter(searchData!, searchTerm);
-		console.log('HandleChange');
+
 		if (searchTerm === '' || filteredResult.length === 0) {
 			hideSearchResults();
 		} else {
@@ -93,10 +93,8 @@ function SearchBar() {
 	function handleClick(e: React.MouseEvent<HTMLInputElement>) {
 		const value = (e.target as HTMLInputElement).value;
 		if (value !== '' && filteredResult.length === 0) {
-			console.log(1);
 			hideSearchResults();
 		} else if (value.length > 0) {
-			console.log(3);
 			const searchTerm = value;
 			const result = filter(searchData!, searchTerm);
 			setFocusIndex(-1);
@@ -106,7 +104,6 @@ function SearchBar() {
 		}
 
 		if (value === '') {
-			console.log(2);
 			setFilteredResult(searchData!);
 			showSearchResults();
 		}
@@ -168,7 +165,6 @@ function SearchBar() {
 		}
 	}
 
-	// const SearchResultItemMemo = useCallback(SearchResultItem, []);
 	return (
 		<SearchWrapper data-testid='search-bar-test-id'>
 			<SearchInput

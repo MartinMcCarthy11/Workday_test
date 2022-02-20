@@ -12,9 +12,7 @@ interface StyleProps {
 
 const SearchResultItem = ({ item, isHighlighted, onKeyDown }: Props) => {
 	function getInitials(name: string) {
-		let initials = name.split(' ').map((str) => str[0]);
-		// console.log(initials);
-		return initials;
+		return name.split(' ').map((str) => str[0]);
 	}
 
 	return (
